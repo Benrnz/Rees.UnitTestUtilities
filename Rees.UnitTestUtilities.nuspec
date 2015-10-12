@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>$id$</id>
+    <version>$version$</version>
+    <title>Rees.UnitTestUtilities</title>
+    <authors>Ben Rees</authors>
+    <owners>Rees.biz</owners>
+    <licenseUrl>https://github.com/Benrnz/Rees.UnitTestUtilities/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/Benrnz/Rees.UnitTestUtilities</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>A set of unit testing utilities to make unit testing a little easier.</description>
+    <copyright>Copyright 2015</copyright>
+    <tags>UnitTesting MsTest NUnit PrivateAccessor</tags>
+  </metadata>
+</package>
