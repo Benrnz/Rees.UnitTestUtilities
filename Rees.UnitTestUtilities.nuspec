@@ -13,4 +13,12 @@
     <copyright>Copyright 2015</copyright>
     <tags>UnitTesting MsTest NUnit PrivateAccessor</tags>
   </metadata>
+    <files>
+      <file src="Net46\bin\Release\Rees.UnitTestUtilities.dll" target="lib\net46" />
+      <file src="Net46\bin\Release\Rees.UnitTestUtilities.xml" target="lib\net46" />
+      <file src="Net46\bin\Release\Rees.UnitTestUtilities.pdb" target="lib\net46" />
+      <file src="PCL\bin\Release\Rees.UnitTestUtilities.dll" target="lib\portable" />
+      <file src="PCL\bin\Release\Rees.UnitTestUtilities.xml" target="lib\portable" />
+      <file src="PCL\bin\Release\Rees.UnitTestUtilities.pdb" target="lib\portable" />
+    </files>
 </package>
