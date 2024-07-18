@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
+﻿using System.Reflection;
 using System.Resources;
 
 namespace Rees.UnitTestUtilities
@@ -31,7 +27,7 @@ namespace Rees.UnitTestUtilities
             this Assembly assembly,
             string resourceName,
             bool outputText = false,
-            Action<string> outputOverride = null)
+            Action<string>? outputOverride = null)
         {
             var text = assembly.ExtractEmbeddedResourceAsText(resourceName, outputText);
             if (outputText)
@@ -66,7 +62,7 @@ namespace Rees.UnitTestUtilities
             this Assembly assembly, 
             string resourceName,
             bool outputText = false,
-            Action<string> outputOverride = null)
+            Action<string>? outputOverride = null)
         {
             using (var stream = assembly.GetManifestResourceStream(resourceName))
             {
@@ -97,7 +93,7 @@ namespace Rees.UnitTestUtilities
         /// <param name="outputOverride">
         ///     An optional override to use to output to. If not specified, Console.WriteLine will be used.
         /// </param>
-        public static void ListAllEmbeddedResources(this Assembly assembly, Action<string> outputOverride = null)
+        public static void ListAllEmbeddedResources(this Assembly assembly, Action<string>? outputOverride = null)
         {
             // this line of code is useful to figure out the name Vs has given the resource! The name is case sensitive.
             assembly.GetManifestResourceNames().ToList().ForEach(t =>
