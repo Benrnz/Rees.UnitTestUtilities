@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace Rees.UnitTestUtilities
+﻿namespace Rees.UnitTestUtilities
 {
     /// <summary>
     ///     An extension class for string.
@@ -34,7 +30,6 @@ namespace Rees.UnitTestUtilities
         public static string[] SplitLines(this string instance, int numberOfLines = 0)
         {
             if (numberOfLines < 0) throw new ArgumentOutOfRangeException(nameof(numberOfLines), "Number of Lines must be a positive integer.");
-            if (instance == null) return null;
 
             string[] split = instance.Split('\r', '\n');
             IEnumerable<string> query = split.Where(l => l.Length > 0);

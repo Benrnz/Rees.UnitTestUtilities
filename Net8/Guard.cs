@@ -1,5 +1,4 @@
-﻿using System;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Reflection;
 
@@ -146,15 +145,15 @@ namespace Rees.UnitTestUtilities
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "Figuring out how and what exception to throw should not pollute the actual exception")]
         private static void AgainstInternal<T>(string message) where T : Exception, new()
         {
-            T ex = null;
+            T ex = default!;
             foreach (ConstructorInfo constructor in typeof(T).GetConstructors(BindingFlags.Public))
             {
                 if (constructor.GetParameters().Length == 1)
                 {
                     ParameterInfo param = constructor.GetParameters()[0];
-                    if (param.ParameterType == typeof(string) && param.Name.ToUpper(CultureInfo.CurrentCulture) == "MESSAGE")
+                    if (param.ParameterType == typeof(string) && param.Name?.ToUpper(CultureInfo.CurrentCulture) == "MESSAGE")
                     {
-                        ex = constructor.Invoke(new object[] { message }) as T;
+                        ex = (constructor.Invoke(new object[] { message }) as T)!;
                         break;
                     }
                 }
@@ -164,7 +163,7 @@ namespace Rees.UnitTestUtilities
             {
                 try
                 {
-                    ex = Activator.CreateInstance(typeof(T), message) as T;
+                    ex = (Activator.CreateInstance(typeof(T), message) as T)!;
                 }
                 catch
                 {

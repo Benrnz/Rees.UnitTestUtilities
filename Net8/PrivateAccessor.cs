@@ -1,5 +1,4 @@
-﻿using System;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Reflection;
 
@@ -19,7 +18,7 @@ namespace Rees.UnitTestUtilities
         /// <returns>The value of the constant.</returns>
         public static object GetConstant(Type type, string constName)
         {
-            return GetStaticField(type, constName);
+            return GetStaticField(type, constName)!;
         }
 
         /// <summary>
@@ -28,7 +27,7 @@ namespace Rees.UnitTestUtilities
         /// <param name="instance">The instance.</param>
         /// <param name="fieldName">Name of the field. Use nameof(_fieldName) to get the name of the field.</param>
         /// <returns>The value of the private field.</returns>
-        public static object GetField(object instance, string fieldName)
+        public static object? GetField(object instance, string fieldName)
         {
             if (instance == null)
             {
@@ -40,7 +39,8 @@ namespace Rees.UnitTestUtilities
                 throw new ArgumentNullException(nameof(fieldName));
             }
 
-            return GetFieldInfo(instance.GetType(), fieldName).GetValue(instance);
+            var fieldInfo = GetFieldInfo(instance.GetType(), fieldName);
+            return fieldInfo?.GetValue(instance);
         }
 
         /// <summary>
@@ -49,7 +49,7 @@ namespace Rees.UnitTestUtilities
         /// <param name="instance">The instance.</param>
         /// <param name="propertyName">Name of the property. Use nameof(PropertyName) to get the name of the property.</param>
         /// <returns>The value of the private property.</returns>
-        public static object GetProperty(object instance, string propertyName)
+        public static object? GetProperty(object instance, string propertyName)
         {
             if (instance == null)
             {
@@ -61,7 +61,8 @@ namespace Rees.UnitTestUtilities
                 throw new ArgumentNullException(nameof(propertyName));
             }
 
-            return GetPropertyInfo(instance.GetType(), propertyName).GetValue(instance, new object[] { });
+            var propertyInfo = GetPropertyInfo(instance.GetType(), propertyName);
+            return propertyInfo?.GetValue(instance, new object[] { });
         }
 
         /// <summary>
@@ -71,7 +72,7 @@ namespace Rees.UnitTestUtilities
         /// <param name="propertyName">Name of the property. Use nameof(PropertyName) to get the name of the property.</param>
         /// <typeparam name="T">The type of the instance object. Use this to specify a different type other than its concrete type</typeparam>
         /// <returns>The value of the private property.</returns>
-        public static object GetProperty<T>(object instance, string propertyName)
+        public static object? GetProperty<T>(object instance, string propertyName)
         {
             if (instance == null)
             {
@@ -83,7 +84,8 @@ namespace Rees.UnitTestUtilities
                 throw new ArgumentNullException(nameof(propertyName));
             }
 
-            return GetPropertyInfo(typeof(T), propertyName).GetValue(instance, new object[] { });
+            var propertyInfo = GetPropertyInfo(typeof(T), propertyName);
+            return propertyInfo?.GetValue(instance, new object[] { });
         }
 
         /// <summary>
@@ -92,11 +94,12 @@ namespace Rees.UnitTestUtilities
         /// <param name="type">The type on which to look for the field.</param>
         /// <param name="fieldName">Name of the field. Use nameof(_fieldName) to get the name of the field.</param>
         /// <returns>The value of the private field.</returns>
-        public static object GetStaticField(Type type, string fieldName)
+        public static object? GetStaticField(Type type, string fieldName)
         {
             Guard.Against<ArgumentNullException>(type == null, "type cannot be null");
             Guard.Against<ArgumentNullException>(fieldName == null, "fieldName cannot be null");
-            return GetStaticFieldInfo(type, fieldName).GetValue(null);
+            FieldInfo fieldInfo = GetStaticFieldInfo(type!, fieldName!);
+            return fieldInfo?.GetValue(null);
         }
 
         /// <summary>
@@ -108,16 +111,16 @@ namespace Rees.UnitTestUtilities
         /// <param name="arguments">The arguments.</param>
         /// <returns>The return value of the method</returns>
         [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter", Justification = "Typed function saves time and code")]
-        public static T InvokeFunction<T>(object instance, string name, params object[] arguments)
+        public static T? InvokeFunction<T>(object instance, string name, params object[] arguments)
         {
             Guard.Against<ArgumentNullException>(instance == null, "instance cannot be null");
             Guard.Against<ArgumentNullException>(name == null, "name cannot be null");
 
             Type returnType = typeof(T);
-            object result = GetMethod(instance.GetType(), name, arguments, instance);
+            var result = GetMethod(instance!.GetType(), name!, arguments, instance);
             try
             {
-                return (T)result;
+                return (T?)result;
             }
             catch (InvalidCastException ex)
             {
@@ -127,7 +130,7 @@ namespace Rees.UnitTestUtilities
                         "Error invoking function '{0}'. The return type was not the expected type. Expected '{1}'. But was '{2}'",
                         name,
                         returnType.Name,
-                        result.GetType().Name),
+                        result?.GetType().Name),
                     ex);
             }
         }
@@ -145,11 +148,11 @@ namespace Rees.UnitTestUtilities
 
             try
             {
-                GetMethod(instance.GetType(), name, arguments, instance);
+                GetMethod(instance!.GetType(), name!, arguments, instance);
             }
             catch (TargetInvocationException ex)
             {
-                Exception inner = ex.InnerException;
+                var inner = ex.InnerException;
                 if (inner == null)
                 {
                     throw;
@@ -168,16 +171,16 @@ namespace Rees.UnitTestUtilities
         /// <param name="arguments">The arguments.</param>
         /// <returns>The typed return value of the method</returns>
         [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter", Justification = "Typed function saves time and code")]
-        public static T InvokeStaticFunction<T>(Type type, string name, params object[] arguments)
+        public static T? InvokeStaticFunction<T>(Type type, string name, params object[] arguments)
         {
             Guard.Against<ArgumentNullException>(type == null, "type cannot be null");
             Guard.Against<ArgumentNullException>(name == null, "name cannot be null");
 
             Type returnType = typeof(T);
-            object result = GetMethod(type, name, arguments, null);
+            var result = GetMethod(type!, name!, arguments, null);
             try
             {
-                return (T)result;
+                return (T?)result;
             }
             catch (InvalidCastException ex)
             {
@@ -187,7 +190,7 @@ namespace Rees.UnitTestUtilities
                         "Error invoking function '{0}'. The return type was not the expected type. Expected '{1}'. But was '{2}'",
                         name,
                         returnType.Name,
-                        result.GetType().Name),
+                        result?.GetType().Name),
                     ex);
             }
         }
@@ -203,7 +206,7 @@ namespace Rees.UnitTestUtilities
             Guard.Against<ArgumentNullException>(type == null, "type cannot be null");
             Guard.Against<ArgumentNullException>(name == null, "name cannot be null");
 
-            GetMethod(type, name, arguments, null);
+            GetMethod(type!, name!, arguments, null);
         }
 
         /// <summary>
@@ -216,8 +219,8 @@ namespace Rees.UnitTestUtilities
         public static T PrivateConstructor<T>(Type[] argumentTypes, object[] parameters) where T : class
         {
             Type type = typeof(T);
-            ConstructorInfo constructor = type.GetConstructor(argumentTypes);
-            return constructor.Invoke(parameters) as T;
+            var constructor = type.GetConstructor(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public, null, argumentTypes, null);
+            return (constructor?.Invoke(parameters) as T)!;
         }
 
         /// <summary>
@@ -314,7 +317,7 @@ namespace Rees.UnitTestUtilities
             Guard.Against<ArgumentNullException>(fieldName == null, "fieldName cannot be null");
             try
             {
-                GetStaticFieldInfo(type, fieldName).SetValue(null, value);
+                GetStaticFieldInfo(type!, fieldName!).SetValue(null, value);
             }
             catch (ArgumentException ex)
             {
@@ -324,7 +327,7 @@ namespace Rees.UnitTestUtilities
 
         private static FieldInfo GetFieldInfo(Type type, string fieldName)
         {
-            FieldInfo info = type.GetField(fieldName, BindingFlags.Instance | BindingFlags.NonPublic);
+            var info = type.GetField(fieldName, BindingFlags.Instance | BindingFlags.NonPublic);
             if (info == null)
             {
                 throw new ArgumentException(string.Format("Field '{0}' does not exist (is the field a static field?)", fieldName), "fieldName");
@@ -333,11 +336,11 @@ namespace Rees.UnitTestUtilities
             return info;
         }
 
-        private static object GetMethod(Type type, string name, object[] arguments, object instance)
+        private static object? GetMethod(Type type, string name, object[] arguments, object instance)
         {
             bool isStatic = instance == null;
             BindingFlags flags = isStatic ? BindingFlags.NonPublic | BindingFlags.Static : BindingFlags.Instance | BindingFlags.NonPublic;
-            MethodInfo method = type.GetMethod(name, flags);
+            var method = type.GetMethod(name, flags);
             if (method == null)
             {
                 throw new NotSupportedException("Type does not include a member by this name: " + name);
@@ -348,7 +351,7 @@ namespace Rees.UnitTestUtilities
 
         private static PropertyInfo GetPropertyInfo(Type type, string propertyName)
         {
-            PropertyInfo info = type.GetProperty(propertyName, BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
+            var info = type.GetProperty(propertyName, BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
             if (info == null)
             {
                 throw new ArgumentException(string.Format(CultureInfo.CurrentCulture, "Property '{0}' does not exist", propertyName), "propertyName");
@@ -359,7 +362,7 @@ namespace Rees.UnitTestUtilities
 
         private static FieldInfo GetStaticFieldInfo(Type type, string fieldName)
         {
-            FieldInfo info = type.GetField(fieldName, BindingFlags.Static | BindingFlags.NonPublic);
+            var info = type.GetField(fieldName, BindingFlags.Static | BindingFlags.NonPublic);
             if (info == null)
             {
                 throw new ArgumentException(string.Format(CultureInfo.CurrentCulture, "Static Field '{0}' does not exist (is the field an instance field?)", fieldName), "fieldName");

@@ -1,0 +1,33 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <PackageId>Rees.UnitTestUtilities</PackageId>
+    <Title>Rees.UnitTestUtilities</Title>
+    <Version>2.0.0</Version>
+    <Authors>Ben Rees</Authors>
+    <Company>Rees.biz</Company>
+    <Description>A small collection of utilities for use with unit testing.
+PrivateAccessors- instantiate using non-public constructors, access non-public members, and invoke non-public methods.
+Use with caution: using private accessors is not intended to be a preferred tool for unit testing, but sometimes is necessary. </Description>
+    <Copyright>2024 Rees.biz</Copyright>
+    <RepositoryUrl>https://github.com/Benrnz/Rees.UnitTestUtilities</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove=".gitignore" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
+
+</Project>
