@@ -17,6 +17,7 @@ Use with caution: using private accessors is not intended to be a preferred tool
     <RepositoryUrl>https://github.com/Benrnz/Rees.UnitTestUtilities</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageTags>UnitTesting;MsTest;NUnit;PrivateAccessor</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
