@@ -24,7 +24,7 @@ Use with caution: using private accessors is not intended to be a preferred tool
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="..\LICENSE">
+    <None Update="LICENSE">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
