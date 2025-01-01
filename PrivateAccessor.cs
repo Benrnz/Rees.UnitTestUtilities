@@ -31,12 +31,18 @@ public static class PrivateAccessor
     /// <returns>The value of the private field.</returns>
     public static object? GetField(object instance, string fieldName)
     {
-        if (instance == null) throw new ArgumentNullException(nameof(instance));
+        if (instance == null)
+        {
+            throw new ArgumentNullException(nameof(instance));
+        }
 
-        if (string.IsNullOrEmpty(fieldName)) throw new ArgumentNullException(nameof(fieldName));
+        if (string.IsNullOrEmpty(fieldName))
+        {
+            throw new ArgumentNullException(nameof(fieldName));
+        }
 
         var fieldInfo = GetFieldInfo(instance.GetType(), fieldName);
-        return fieldInfo?.GetValue(instance);
+        return fieldInfo.GetValue(instance);
     }
 
     /// <summary>
@@ -47,12 +53,18 @@ public static class PrivateAccessor
     /// <returns>The value of the private property.</returns>
     public static object? GetProperty(object instance, string propertyName)
     {
-        if (instance == null) throw new ArgumentNullException(nameof(instance));
+        if (instance == null)
+        {
+            throw new ArgumentNullException(nameof(instance));
+        }
 
-        if (string.IsNullOrEmpty(propertyName)) throw new ArgumentNullException(nameof(propertyName));
+        if (string.IsNullOrEmpty(propertyName))
+        {
+            throw new ArgumentNullException(nameof(propertyName));
+        }
 
         var propertyInfo = GetPropertyInfo(instance.GetType(), propertyName);
-        return propertyInfo?.GetValue(instance, new object[] { });
+        return propertyInfo.GetValue(instance, []);
     }
 
     /// <summary>
@@ -64,12 +76,18 @@ public static class PrivateAccessor
     /// <returns>The value of the private property.</returns>
     public static object? GetProperty<T>(object instance, string propertyName)
     {
-        if (instance == null) throw new ArgumentNullException(nameof(instance));
+        if (instance == null)
+        {
+            throw new ArgumentNullException(nameof(instance));
+        }
 
-        if (string.IsNullOrEmpty(propertyName)) throw new ArgumentNullException(nameof(propertyName));
+        if (string.IsNullOrEmpty(propertyName))
+        {
+            throw new ArgumentNullException(nameof(propertyName));
+        }
 
         var propertyInfo = GetPropertyInfo(typeof(T), propertyName);
-        return propertyInfo?.GetValue(instance, new object[] { });
+        return propertyInfo.GetValue(instance, new object[] { });
     }
 
     /// <summary>
@@ -80,10 +98,10 @@ public static class PrivateAccessor
     /// <returns>The value of the private field.</returns>
     public static object? GetStaticField(Type type, string fieldName)
     {
-        Guard.Against<ArgumentNullException>(type == null, "type cannot be null");
-        Guard.Against<ArgumentNullException>(fieldName == null, "fieldName cannot be null");
+        Guard.Against<ArgumentNullException>(type is null, "type cannot be null");
+        Guard.Against<ArgumentNullException>(fieldName is null, "fieldName cannot be null");
         var fieldInfo = GetStaticFieldInfo(type!, fieldName!);
-        return fieldInfo?.GetValue(null);
+        return fieldInfo.GetValue(null);
     }
 
     /// <summary>
@@ -98,8 +116,8 @@ public static class PrivateAccessor
         Justification = "Typed function saves time and code")]
     public static T? InvokeFunction<T>(object instance, string name, params object[] arguments)
     {
-        Guard.Against<ArgumentNullException>(instance == null, "instance cannot be null");
-        Guard.Against<ArgumentNullException>(name == null, "name cannot be null");
+        Guard.Against<ArgumentNullException>(instance is null, "instance cannot be null");
+        Guard.Against<ArgumentNullException>(name is null, "name cannot be null");
 
         var returnType = typeof(T);
         var result = GetMethod(instance!.GetType(), name!, arguments, instance);
@@ -128,8 +146,8 @@ public static class PrivateAccessor
     /// <param name="arguments">The arguments.</param>
     public static void InvokeMethod(object instance, string name, params object[] arguments)
     {
-        Guard.Against<ArgumentNullException>(instance == null, "instance cannot be null");
-        Guard.Against<ArgumentNullException>(name == null, "name cannot be null");
+        Guard.Against<ArgumentNullException>(instance is null, "instance cannot be null");
+        Guard.Against<ArgumentNullException>(name is null, "name cannot be null");
 
         try
         {
@@ -138,7 +156,10 @@ public static class PrivateAccessor
         catch (TargetInvocationException ex)
         {
             var inner = ex.InnerException;
-            if (inner == null) throw;
+            if (inner == null)
+            {
+                throw;
+            }
 
             throw inner;
         }
@@ -156,8 +177,8 @@ public static class PrivateAccessor
         Justification = "Typed function saves time and code")]
     public static T? InvokeStaticFunction<T>(Type type, string name, params object[] arguments)
     {
-        Guard.Against<ArgumentNullException>(type == null, "type cannot be null");
-        Guard.Against<ArgumentNullException>(name == null, "name cannot be null");
+        Guard.Against<ArgumentNullException>(type is null, "type cannot be null");
+        Guard.Against<ArgumentNullException>(name is null, "name cannot be null");
 
         var returnType = typeof(T);
         var result = GetMethod(type!, name!, arguments, null);
@@ -186,10 +207,10 @@ public static class PrivateAccessor
     /// <param name="arguments">The arguments.</param>
     public static void InvokeStaticMethod(Type type, string name, params object[] arguments)
     {
-        Guard.Against<ArgumentNullException>(type == null, "type cannot be null");
-        Guard.Against<ArgumentNullException>(name == null, "name cannot be null");
+        Guard.Against<ArgumentNullException>(type is null, "type cannot be null");
+        Guard.Against<ArgumentNullException>(name is null, "name cannot be null");
 
-        GetMethod(type!, name!, arguments, null);
+        GetMethod(type!, name!, arguments, null!);
     }
 
     /// <summary>
@@ -225,9 +246,15 @@ public static class PrivateAccessor
     /// <param name="value">The value to set it to.</param>
     public static void SetField(object instance, string fieldName, object value)
     {
-        if (instance == null) throw new ArgumentNullException(nameof(instance));
+        if (instance == null)
+        {
+            throw new ArgumentNullException(nameof(instance));
+        }
 
-        if (string.IsNullOrEmpty(fieldName)) throw new ArgumentNullException(nameof(fieldName));
+        if (string.IsNullOrEmpty(fieldName))
+        {
+            throw new ArgumentNullException(nameof(fieldName));
+        }
 
         GetFieldInfo(instance.GetType(), fieldName).SetValue(instance, value);
     }
@@ -242,9 +269,15 @@ public static class PrivateAccessor
     /// <typeparam name="T">The type to attempt to set the fieldName on.</typeparam>
     public static void SetField<T>(object instance, string fieldName, object value)
     {
-        if (instance == null) throw new ArgumentNullException(nameof(instance));
+        if (instance == null)
+        {
+            throw new ArgumentNullException(nameof(instance));
+        }
 
-        if (string.IsNullOrEmpty(fieldName)) throw new ArgumentNullException(nameof(fieldName));
+        if (string.IsNullOrEmpty(fieldName))
+        {
+            throw new ArgumentNullException(nameof(fieldName));
+        }
 
         GetFieldInfo(typeof(T), fieldName).SetValue(instance, value);
     }
@@ -257,9 +290,15 @@ public static class PrivateAccessor
     /// <param name="value">The value to set it to.</param>
     public static void SetProperty(object instance, string propertyName, object value)
     {
-        if (instance == null) throw new ArgumentNullException(nameof(instance));
+        if (instance == null)
+        {
+            throw new ArgumentNullException(nameof(instance));
+        }
 
-        if (string.IsNullOrEmpty(propertyName)) throw new ArgumentNullException(nameof(propertyName));
+        if (string.IsNullOrEmpty(propertyName))
+        {
+            throw new ArgumentNullException(nameof(propertyName));
+        }
 
         try
         {
@@ -297,45 +336,32 @@ public static class PrivateAccessor
 
     private static FieldInfo GetFieldInfo(Type type, string fieldName)
     {
-        var info = type.GetField(fieldName, BindingFlags.Instance | BindingFlags.NonPublic);
-        if (info == null)
-            throw new ArgumentException(
+        var info = type.GetField(fieldName, BindingFlags.Instance | BindingFlags.NonPublic) ?? throw new ArgumentException(
                 string.Format("Field '{0}' does not exist (is the field a static field?)", fieldName), "fieldName");
-
         return info;
     }
 
-    private static object? GetMethod(Type type, string name, object[] arguments, object instance)
+    private static object? GetMethod(Type type, string name, object[] arguments, object? instance)
     {
-        var isStatic = instance == null;
+        var isStatic = instance is null;
         var flags = isStatic
             ? BindingFlags.NonPublic | BindingFlags.Static
             : BindingFlags.Instance | BindingFlags.NonPublic;
-        var method = type.GetMethod(name, flags);
-        if (method == null) throw new NotSupportedException("Type does not include a member by this name: " + name);
-
+        var method = type.GetMethod(name, flags) ?? throw new NotSupportedException("Type does not include a member by this name: " + name);
         return method.Invoke(instance, arguments);
     }
 
     private static PropertyInfo GetPropertyInfo(Type type, string propertyName)
     {
-        var info = type.GetProperty(propertyName, BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
-        if (info == null)
-            throw new ArgumentException(
-                string.Format(CultureInfo.CurrentCulture, "Property '{0}' does not exist", propertyName),
-                "propertyName");
-
+        var info = type.GetProperty(propertyName, BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public) ??
+                   throw new ArgumentException(string.Format(CultureInfo.CurrentCulture, "Property '{0}' does not exist", propertyName), nameof(propertyName));
         return info;
     }
 
     private static FieldInfo GetStaticFieldInfo(Type type, string fieldName)
     {
-        var info = type.GetField(fieldName, BindingFlags.Static | BindingFlags.NonPublic);
-        if (info == null)
-            throw new ArgumentException(
-                string.Format(CultureInfo.CurrentCulture,
-                    "Static Field '{0}' does not exist (is the field an instance field?)", fieldName), "fieldName");
-
+        var info = type.GetField(fieldName, BindingFlags.Static | BindingFlags.NonPublic) ??
+                   throw new ArgumentException(string.Format(CultureInfo.CurrentCulture, "Static Field '{0}' does not exist (is the field an instance field?)", fieldName), nameof(fieldName));
         return info;
     }
 }

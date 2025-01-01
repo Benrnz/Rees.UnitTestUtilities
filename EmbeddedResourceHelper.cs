@@ -33,9 +33,13 @@ public static class EmbeddedResourceHelper
         if (outputText)
         {
             if (outputOverride == null)
+            {
                 Console.WriteLine(text);
+            }
             else
+            {
                 outputOverride(text);
+            }
         }
 
         return text.SplitLines();
@@ -64,14 +68,21 @@ public static class EmbeddedResourceHelper
         using (var stream = assembly.GetManifestResourceStream(resourceName))
         {
             if (stream == null)
+            {
                 throw new MissingManifestResourceException("Cannot find resource named: " + resourceName);
+            }
 
             var reader = new StreamReader(stream);
             var text = reader.ReadToEnd();
             if (outputOverride == null)
+            {
                 Console.WriteLine(text);
+            }
             else
+            {
                 outputOverride(text);
+            }
+
             return text;
         }
     }
@@ -90,9 +101,13 @@ public static class EmbeddedResourceHelper
         assembly.GetManifestResourceNames().ToList().ForEach(t =>
         {
             if (outputOverride == null)
+            {
                 Console.WriteLine(t);
+            }
             else
+            {
                 outputOverride(t);
+            }
         });
     }
 }

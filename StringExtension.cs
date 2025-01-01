@@ -30,11 +30,16 @@ public static class StringExtension
     public static string[] SplitLines(this string instance, int numberOfLines = 0)
     {
         if (numberOfLines < 0)
+        {
             throw new ArgumentOutOfRangeException(nameof(numberOfLines), "Number of Lines must be a positive integer.");
+        }
 
-        string[] split = instance.Split('\r', '\n');
-        IEnumerable<string> query = split.Where(l => l.Length > 0);
-        if (numberOfLines > 0) query = query.Take(numberOfLines);
+        var split = instance.Split('\r', '\n');
+        var query = split.Where(l => l.Length > 0);
+        if (numberOfLines > 0)
+        {
+            query = query.Take(numberOfLines);
+        }
 
         return query.ToArray();
     }

@@ -24,7 +24,10 @@ public static class Guard
         Justification = "Best reading syntax")]
     public static void Against<T>(Func<bool> erroneousCondition, string message) where T : Exception, new()
     {
-        if (erroneousCondition == null || erroneousCondition()) AgainstInternal<T>(message);
+        if (erroneousCondition())
+        {
+            AgainstInternal<T>(message);
+        }
     }
 
     /// <summary>
@@ -41,7 +44,10 @@ public static class Guard
         Justification = "Best reading syntax")]
     public static void Against<T>(bool erroneousCondition, string message) where T : Exception, new()
     {
-        if (erroneousCondition) AgainstInternal<T>(message);
+        if (erroneousCondition)
+        {
+            AgainstInternal<T>(message);
+        }
     }
 
     /// <summary>
@@ -54,9 +60,15 @@ public static class Guard
     /// <param name="rectifyTheProblem">The action to rectify the problem.</param>
     public static void Against(Func<bool> erroneousCondition, Action rectifyTheProblem)
     {
-        if (rectifyTheProblem == null) throw new ArgumentNullException(nameof(rectifyTheProblem));
+        if (rectifyTheProblem == null)
+        {
+            throw new ArgumentNullException(nameof(rectifyTheProblem));
+        }
 
-        if (erroneousCondition == null || erroneousCondition()) rectifyTheProblem();
+        if (erroneousCondition())
+        {
+            rectifyTheProblem();
+        }
     }
 
     /// <summary>
@@ -71,7 +83,10 @@ public static class Guard
         Justification = "Best reading syntax")]
     public static void Implements<TInterface>(object instance, string message) where TInterface : class
     {
-        if (instance == null) throw new ArgumentNullException(nameof(instance));
+        if (instance == null)
+        {
+            throw new ArgumentNullException(nameof(instance));
+        }
 
         Implements<TInterface>(instance.GetType(), message);
     }
@@ -88,7 +103,10 @@ public static class Guard
         Justification = "Best reading syntax")]
     public static void Implements<TInterface>(Type type, string message) where TInterface : class
     {
-        if (!typeof(TInterface).IsAssignableFrom(type)) throw new InvalidOperationException(message);
+        if (!typeof(TInterface).IsAssignableFrom(type))
+        {
+            throw new InvalidOperationException(message);
+        }
     }
 
     /// <summary>
@@ -101,7 +119,10 @@ public static class Guard
         Justification = "Best reading syntax")]
     public static void InheritsFrom<TBase>(object instance, string message) where TBase : class
     {
-        if (instance == null) throw new ArgumentNullException(nameof(instance));
+        if (instance == null)
+        {
+            throw new ArgumentNullException(nameof(instance));
+        }
 
         InheritsFrom<TBase>(instance.GetType(), message);
     }
@@ -116,42 +137,48 @@ public static class Guard
         Justification = "Best reading syntax")]
     public static void InheritsFrom<TBase>(Type type, string message) where TBase : class
     {
-        if (type == null) throw new ArgumentNullException(nameof(type));
+        if (type == null)
+        {
+            throw new ArgumentNullException(nameof(type));
+        }
 
-        if (type.BaseType != typeof(TBase)) throw new InvalidOperationException(message);
+        if (type.BaseType != typeof(TBase))
+        {
+            throw new InvalidOperationException(message);
+        }
     }
 
     [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes",
         Justification = "Figuring out how and what exception to throw should not pollute the actual exception")]
     private static void AgainstInternal<T>(string message) where T : Exception, new()
     {
-        T ex = default!;
+        object? ex1 = null;
         foreach (var constructor in typeof(T).GetConstructors(BindingFlags.Public))
+        {
             if (constructor.GetParameters().Length == 1)
             {
                 var param = constructor.GetParameters()[0];
                 if (param.ParameterType == typeof(string) &&
                     param.Name?.ToUpper(CultureInfo.CurrentCulture) == "MESSAGE")
                 {
-                    ex = (constructor.Invoke(new object[] { message }) as T)!;
+                    ex1 = (constructor.Invoke(new object[] { message }) as T)!;
                     break;
                 }
             }
+        }
 
-        if (ex == null)
+        if (ex1 is null)
         {
             try
             {
-                ex = (Activator.CreateInstance(typeof(T), message) as T)!;
+                ex1 = (Activator.CreateInstance(typeof(T), message) as T)!;
             }
             catch
             {
-                ex = new T();
+                ex1 = new T();
             }
-
-            if (ex == null) ex = new T();
         }
 
-        throw ex;
+        throw (T)ex1;
     }
 }
