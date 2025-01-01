@@ -34,6 +34,10 @@ jobs:
       with:
         dotnet-version: 9.0.x
 
+    - name: Configure EOL settings
+      run: |
+        git config --global core.autocrlf true
+
     - name: Restore dependencies
       run: dotnet restore
 
