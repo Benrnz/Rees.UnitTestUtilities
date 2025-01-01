@@ -16,6 +16,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Configure EOL settings
+      run: |
+        git config --global core.autocrlf true
+
     - name: Checkout
       uses: actions/checkout@v4
 
@@ -33,10 +37,6 @@ jobs:
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 9.0.x
-
-    - name: Configure EOL settings
-      run: |
-        git config --global core.autocrlf true
 
     - name: Restore dependencies
       run: dotnet restore
