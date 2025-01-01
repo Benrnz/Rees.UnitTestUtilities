@@ -16,6 +16,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    # Configure EOL setting is necessary to run the build on Linux.
     - name: Configure EOL settings
       run: |
         git config --global core.autocrlf true
