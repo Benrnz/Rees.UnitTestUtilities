@@ -4,8 +4,6 @@
 name: Build
 
 on:
-  push:
-    branches: [ "master" ]
   pull_request:
     branches: [ "master" ]
   workflow_dispatch:
@@ -16,6 +14,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    # Configure EOL setting is necessary to run the build on Linux.
+    - name: Configure EOL settings
+      run: |
+        git config --global core.autocrlf true
+
     - name: Checkout
       uses: actions/checkout@v4
 
@@ -32,13 +35,13 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: 8.0.x
-        
+        dotnet-version: 9.0.x
+
     - name: Restore dependencies
       run: dotnet restore
-      
+
     - name: Build
       run: dotnet build --no-restore --configuration Release
-      
+
     - name: Format
-      run: dotnet format --no-retore --verbosity minimal --verify-no-changes
+      run: dotnet format Rees.UnitTestUtilities.csproj --no-restore --verbosity minimal --verify-no-changes

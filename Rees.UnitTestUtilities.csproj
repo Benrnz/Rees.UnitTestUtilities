@@ -6,7 +6,7 @@
         <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
         <PackageId>Rees.UnitTestUtilities</PackageId>
         <Title>Rees.UnitTestUtilities</Title>
-        <Version>2.0.1</Version>
+        <Version>2.0.3</Version>
         <Authors>Ben Rees</Authors>
         <Company>Rees.biz</Company>
         <Description>A small collection of utilities for use with unit testing.
@@ -34,4 +34,7 @@
         </None>
     </ItemGroup>
 
+    <ItemGroup>
+        <None Update="README.md" Pack="true" PackagePath="\"/>
+    </ItemGroup>
 </Project>
