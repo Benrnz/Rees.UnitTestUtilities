@@ -1,6 +1,4 @@
-﻿using System.Runtime.Serialization;
-
-namespace Rees.UnitTestUtilities;
+﻿namespace Rees.UnitTestUtilities;
 
 public class EnsureFailedException : Exception
 {
