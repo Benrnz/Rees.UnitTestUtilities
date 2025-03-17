@@ -24,13 +24,15 @@ PrivateAccessor.InvokeMethod(this.subject, nameof(SubjectType.InitialiseTheRules
 
 Guard
 =====
+WARNING: Use of this class is deprecated and superceded by much better features in later versions of .NET.
+
 A precondition helper class that provides an easier to read syntax for argument checking and some validation.
 
 Examples:
 
 ```csharp
 // ==========================================================================================
-// Instead of 
+// Instead of
 if (type == null) {
   throw new ArgumentNullException("type cannot be null");
 }

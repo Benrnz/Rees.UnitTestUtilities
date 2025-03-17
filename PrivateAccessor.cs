@@ -46,6 +46,28 @@ public static class PrivateAccessor
     }
 
     /// <summary>
+    ///     Gets a private field from a specified type in the inheritance hierarchy.
+    /// </summary>
+    /// <param name="instance">The instance.</param>
+    /// <param name="fieldName">Name of the field. Use nameof(_fieldName) to get the name of the field.</param>
+    /// <returns>The value of the private field.</returns>
+    public static object? GetField<T>(object instance, string fieldName)
+    {
+        if (instance == null)
+        {
+            throw new ArgumentNullException(nameof(instance));
+        }
+
+        if (string.IsNullOrEmpty(fieldName))
+        {
+            throw new ArgumentNullException(nameof(fieldName));
+        }
+
+        var fieldInfo = GetFieldInfo(typeof(T), fieldName);
+        return fieldInfo.GetValue(instance);
+    }
+
+    /// <summary>
     ///     Gets a private property.
     /// </summary>
     /// <param name="instance">The instance.</param>
